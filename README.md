@@ -80,7 +80,7 @@ and you want to group the diagnoses into the two categories: "mental health issu
 ```ocaml
 module Diagnoses_clusters = Cluster.Make ((
   struct
-    type t = string
+    type t = string; [@@deriving sexp, compare]
     let get_name = Fn.id
   end : Cluster.Make_arg with type t = string
 ))
