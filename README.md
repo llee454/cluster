@@ -80,12 +80,16 @@ and you want to group the diagnoses into the two categories: "mental health issu
 ```ocaml
 module Diagnoses_clusters = Cluster.Make ((
   struct
-    type t = string; [@@deriving sexp, compare]
+    type t = string [@@deriving sexp, compare]
     let get_name = Fn.id
   end : Cluster.Make_arg with type t = string
 ))
 
-let result = Diagnoses_clusters.cluster ~k_shared=0.5 ~k_not_shared=0.4 ~ignore:String.set.empty ~clusters diagnoses
+let categorize_diagnoses diagnoses =
+  let open Diagnoses_clusters in
+  cluster ~k_shared:0.5 ~k_not_shared:0.4 ~ignore:String.Set.empty
+    ~clusters:(Diagnoses_clusters.Set.of_list clusters)
+    diagnoses
 ```
 
 Note: the cluster algorithm accepts two arguments: `k_shared` and `k_not_shared`. `k_shared` specifies how heavily the algorithm will weight words that appear in both the cluster's word set and the phrase being analyzed, while `k_not_shared` specifies how heavily the algorithm will weight words that are "missing." In general `k_shared` should be greater than `k_not_shared`.
