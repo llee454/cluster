@@ -4,6 +4,13 @@
 *)
 open! Core_kernel
 
+type 'a cluster = {
+  label: string;
+  word_set: String.Set.t;
+  entries: 'a list;
+}
+[@@deriving sexp, compare]
+
 let get_words s =
   String.lowercase s |> String.split_on_chars ~on:[ ' '; '-'; '/'; '('; ')'; ','; '.'; '&' ]
 
@@ -70,18 +77,12 @@ end
 
 module Make (M : Make_arg) = struct
   (** Represents clusters of entries that have similar names.*)
-  type cluster = {
-    label: string;
-    word_set: String.Set.t;
-    entries: M.t list;
-  }
-  [@@deriving sexp, compare]
 
-  type t = cluster [@@deriving sexp]
+  type t = M.t cluster [@@deriving sexp]
 
   module Set = struct
     include Set.Make (struct
-      type t = cluster [@@deriving sexp, compare]
+      type t = M.t cluster [@@deriving sexp, compare]
     end)
   end
 
@@ -197,3 +198,6 @@ module Make (M : Make_arg) = struct
     in
     cluster_acc_to_cluster_res res ~modify_clusters:(List.map ~f:(fun cluster -> !cluster))
 end
+
+(** Represents a cluster. *)
+type 'a t = 'a cluster
