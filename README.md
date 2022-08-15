@@ -24,6 +24,27 @@ dune build
 dune exec analysis/main.exe
 ```
 
+Usage in Other Projects
+-----------------------
+
+To use this PPX library in another project include the `cluster` library in your Dune file's libraries section. For example:
+
+```
+(executable
+ (name main)
+ (libraries
+  core_kernel
+  cluster
+  )
+ (preprocess
+  (pps ppx_jane))
+  (modes exe)
+)
+```
+
+You must also update your OPAM package configuration file. Add the following line to your "pin-depends" section: `["cluster.1.0.0" "git+https://github.com/llee454/cluster.git#main"]`. Add the following to your "depends" section: `  "cluster" { = "1.0.0"}`.
+
+
 Example
 -------
 
