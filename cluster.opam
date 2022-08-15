@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Larry Darryl Lee Jr. <llee454@gmail.com>"
+authors: [
+  "Larry Darryl Lee Jr."
+]
+synopsis: "The cluster module defines functions that allow you to cluster phrases, names, and titles by similarity or equivalence."
+description: """
+The cluster module defines functions that allow you to cluster
+phrases, names, and titles by similarity or equivalence. It's
+functions can either accept a set of cluster categories and then group
+a set of names, phrases, or titles, into those categories, or it can
+accept a set of names, phrases, and titles, and partition them into a
+set of inferred clusters. This library is useful whenever you have
+data that you want to categorize.
+"""
+license: "GPL-3.0-or-later"
+tags: []
+homepage: "https://github.com/llee454/cluster"
+doc: "https://github.com/llee454/cluster"
+bug-reports: "https://github.com/llee454/cluster/issues"
+depends: [
+  "ocaml"
+  "dune"
+  "ocaml-lsp-server"
+  "ocamlformat"
+  "ppx_jane"
+  "core_kernel"
+  "core"
+]
+build: ["dune" "build" "-p" name "-j" jobs]

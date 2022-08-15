@@ -1,0 +1,10 @@
+_build
+_opam
+
+# MacOS file system auxiliary files
+.DS_Store
+
+# Vim auxiliary files
+*.aux
+*.swp
+*.swo

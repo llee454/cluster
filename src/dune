@@ -1,0 +1,8 @@
+(library
+  (public_name cluster)
+  (name cluster)
+  (libraries
+    core_kernel
+  )
+  (preprocess (pps ppx_jane))
+)
