@@ -12,7 +12,7 @@ type 'a cluster = {
 [@@deriving sexp, compare]
 
 let get_words s =
-  String.lowercase s |> String.split_on_chars ~on:[ ' '; '-'; '/'; '('; ')'; ','; '.'; '&' ]
+  String.lowercase s |> String.split_on_chars ~on:[ ' '; '-'; '_'; '/'; '('; ')'; ','; '.'; '&' ]
 
 (**
   Accepts a list of names and returns the frequencies of the words
