@@ -153,6 +153,7 @@ module Make (M : Make_arg) = struct
     clusters: t list;
     rejected: M.t list String.Table.t;
   }
+  [@@deriving sexp]
 
   type cluster_acc = {
     clusters: t ref list;
