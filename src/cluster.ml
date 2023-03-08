@@ -162,6 +162,20 @@ module Make (M : Make_arg) = struct
   [@@deriving stable_record ~version:cluster_res ~modify:[ clusters ]]
 
   (**
+    Accepts two arguments: ws, the current entry's word set; and
+    clusters, a list of cluster references; and returns the cluster
+    closest to the entry along with its distance.
+  *)
+  let find_closest_cluster ~freq ~k_shared ~k_not_shared ws =
+    List.fold ~init:None ~f:(fun acc (cluster : t ref) ->
+        let { word_set; _ } = !cluster in
+        let score = metric ~k_shared ~k_not_shared freq word_set ws in
+        match acc with
+        | None -> Option.some_if Float.(0.0 <= score) (score, cluster)
+        | Some ((curr_score, _) as curr) ->
+          Some (if Float.(curr_score <= score) then score, cluster else curr))
+
+  (**
     Accepts a list of entries and groups them into clusters based on
     their names. This function accepts a bag of clusters and groups
     the given entries around them.
@@ -177,13 +191,7 @@ module Make (M : Make_arg) = struct
           let name = M.get_name entry in
           let ws = get_word_set ~ignore name in
           (* find the closest cluster *)
-          List.fold clusters ~init:None ~f:(fun acc (cluster : t ref) ->
-              let { word_set; _ } = !cluster in
-              let score = metric ~k_shared ~k_not_shared freq word_set ws in
-              match acc with
-              | None -> Option.some_if Float.(0.0 <= score) (score, cluster)
-              | Some ((curr_score, _) as curr) ->
-                Some (if Float.(curr_score <= score) then score, cluster else curr))
+          find_closest_cluster ~freq ~k_shared ~k_not_shared ws clusters
           |> function
           | Some (_, cluster) ->
             (* add entry to cluster *)
@@ -191,7 +199,7 @@ module Make (M : Make_arg) = struct
             cluster := { label; word_set; entries = List.cons entry entries };
             acc
           | None ->
-            (* add new cluster *)
+            (* add entry to the "rejected" table *)
             String.Table.update rejected name ~f:(function
               | None -> [ entry ]
               | Some entries -> entry :: entries);

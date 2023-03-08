@@ -75,7 +75,7 @@ let diagnoses = [
 ]
 ```
 
-and you want to group the diagnoses into the two categories: "mental health issues," and "physical health issues." Then you can use the `cluseter` function provided by this module to do so:
+and you want to group the diagnoses into the two categories: "mental health issues," and "physical health issues." Then you can use the `cluster` function provided by this module to do so:
 
 ```ocaml
 module Diagnoses_clusters = Cluster.Make ((
